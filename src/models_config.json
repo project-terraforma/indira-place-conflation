@@ -1,0 +1,24 @@
+{
+  "models": [
+    {
+    "name": "MiniLM-L6-v2",
+    "provider": "huggingface",
+    "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+    "api_key": "",
+    "api_key_env": "HF_TOKEN",
+    "cost_per_1m_input_tokens": 0.0,
+    "cost_per_1m_output_tokens": 0.0,
+    "max_tokens": 0
+    } 
+  ],
+  "_instructions": {
+    "api_key": "Put your API key directly here (NOT recommended for security), OR leave empty to use api_key_env",
+    "api_key_env": "Environment variable name to read API key from (recommended). If both are empty, model is skipped.",
+    "provider": "Must be one of: openai, anthropic, google",
+    "model_id": "The exact model identifier from the provider",
+    "cost_per_1m_tokens": "Cost per 1 million tokens - check provider pricing pages",
+    "max_tokens": "Maximum output tokens per request (100 is usually enough for MATCH/NO_MATCH)",
+    "how_to_add_models": "Copy any model block, change the values, and it will be automatically tested"
+  },
+  "_security_note": "For production use, always use environment variables (api_key_env) instead of hardcoding API keys in this file"
+}
