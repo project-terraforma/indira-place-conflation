@@ -1,21 +1,21 @@
 [
   {
     "model_name": "MiniLM-L6-v2",
-    "accuracy": 0.65,
-    "precision": 0.6410256410256411,
-    "recall": 1.0,
-    "f1_score": 0.78125,
-    "avg_similarity": 0.7585350811481476,
-    "threshold": 0.6,
-    "n_samples": 200,
+    "accuracy": 0.6833333333333333,
+    "precision": 0.6630434782608695,
+    "recall": 0.9891891891891892,
+    "f1_score": 0.7939262472885033,
+    "avg_similarity": 0.7594577497243882,
+    "threshold": 0.6500000000000002,
+    "n_samples": 300,
     "confusion_matrix": [
       [
-        5,
-        70
+        22,
+        93
       ],
       [
-        0,
-        125
+        2,
+        183
       ]
     ]
   }
