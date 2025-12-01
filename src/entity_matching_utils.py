@@ -119,6 +119,22 @@ def website_similarity(w1, w2):
         return 0
     return 1 if d1 == d2 else 0
 
+def postcode_similarity(a1, a2):
+    return 1.0 if a1 == a2 and a1 != "" else 0.0
+
+def locality_similarity(a1, a2):
+    return 1.0 if a1.lower() == a2.lower() and a1 != "" else 0.0
+
+def country_similarity(a1, a2):
+    return 1.0 if a1.lower() == a2.lower() and a1 != "" else 0.0
+
+def region_similarity(a1, a2):
+    return 1.0 if a1.lower() == a2.lower() and a1 != "" else 0.0
+
+def street_similarity(s1, s2):
+    return fuzz.partial_ratio(s1, s2) / 100
+
+
 
 
 # ============================================================
@@ -178,3 +194,18 @@ def hybrid_similarity(emb_sim, row):
         w["phone"]     * p +
         w["bias"]
     )
+
+def parse_address(addr_json):
+    """Return dictionary with detailed address components."""
+    arr = safe_json_load(addr_json)
+    if isinstance(arr, list) and len(arr) > 0:
+        a = arr[0]
+        return {
+            "freeform": a.get("freeform", "") or "",
+            "locality": a.get("locality", "") or "",
+            "region": a.get("region", "") or "",
+            "postcode": a.get("postcode", "") or "",
+            "country": a.get("country", "") or ""
+        }
+    return {"freeform": "", "locality": "", "region": "", "postcode": "", "country": ""}
+
