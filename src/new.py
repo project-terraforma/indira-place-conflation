@@ -1,8 +1,3 @@
-# ============================================================
-# entity_matching_main.py
-# Clean hybrid embedding evaluation (NO WEIGHT OPTIMIZER)
-# ============================================================
-
 import os
 import json
 import numpy as np
@@ -32,7 +27,7 @@ class ModelConfig:
     max_tokens: int = 0
 
 
-def load_models_config(path="models_config.json"):
+def load_models_config(path="models_config2.json"):
     with open(path, "r") as f:
         cfg = json.load(f)
 

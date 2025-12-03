@@ -206,3 +206,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+pipeline/fails.csv
+pipeline/output.csv
+pipeline/test.csv
+pipeline/llm_predictions.csv
+pipeline/incorrect_predictions.csv
+DataExploration.ipynb
