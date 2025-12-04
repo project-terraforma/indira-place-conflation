@@ -79,20 +79,14 @@ All models were tested via on-demand API access:
 Each model was evaluated for JSON reliability, address consistency, handling of similarity scores, and overall accuracy.
 
 ## Repository Structure
-project/
-│
-├── dataclean.py # Data normalization and preprocessing
-├── fuzzmatch.py # Hybrid similarity scoring system
-├── llm.py # LLM interface and prompt handling
-├── main.py # Runs scoring + LLM evaluation end-to-end
-├── check.py # Evaluation of accuracy and confusion matrix
-├── test.py # Helper testing utilities
-│
-├── output.csv # Cleaned baseline predictions
-├── llm_predictions.csv # Main LLM evaluation output
-│
-├── kimi.csv # Results from Kimi models
-├── llama8b-instant.csv # Results from Llama 8B Instant
+pipeline/
+├── check.py
+├── dataclean.py
+├── fuzzmatch.py
+├── llm.py
+├── main.py
+├── output.csv
+└── test.py
 
 
 ## Summary
