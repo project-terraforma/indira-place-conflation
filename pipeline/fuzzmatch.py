@@ -156,7 +156,7 @@ def score_row(row) -> float:
     )
 
 
-def predict_label(score: float, threshold: float = 0.50) -> int:
+def predict_label(score: float, threshold: float = 0.671) -> int:
     """Convert score into a binary label."""
     return 1 if score >= threshold else 0
 

@@ -56,8 +56,6 @@ df = df.drop([
     "base_website",
     "address_full",
     "base_address_full",
-    "match_score",
-    "pred_label"
 ], axis=1)
 df.to_csv("output.csv", index=False)
 

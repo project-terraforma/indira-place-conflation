@@ -212,3 +212,8 @@ pipeline/test.csv
 pipeline/llm_predictions.csv
 pipeline/incorrect_predictions.csv
 DataExploration.ipynb
+pipeline/incorrect_ml_predictions.csv
+pipeline/incorrect_predictions1.csv
+pipeline/incorrect_predictions2.csv
+pipeline/kimi.csv
+pipeline/llama8b-instant.csv

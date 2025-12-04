@@ -18,7 +18,8 @@ def evaluate_llm_predictions(
 
     # Identify incorrect predictions
     incorrect_mask = y_true != y_pred
-    incorrect = df.loc[incorrect_mask, ["llm_confidence", "llm_reason"]].copy()
+    # incorrect = df.loc[incorrect_mask, ["llm_confidence", "llm_reason"]].copy()
+    incorrect = df.loc[incorrect_mask].copy()
     incorrect["label"] = y_true[incorrect_mask].values
 
     # Save incorrect predictions

@@ -7,20 +7,49 @@ from groq import Groq
 # GROQ CLIENT (auto-loads GROQ_API_KEY from environment)
 # ============================================================
 client = Groq()
-MODEL = "llama-3.1-8b-instant"
+MODEL = "llama-3.3-70b-versatile"
 
 # ============================================================
 # PROMPT TEMPLATE (freeform-only matching)
 # ============================================================
 PROMPT_TEMPLATE = """
-You are an expert at determining whether two business records refer to the same
-physical location. Analyze the freeform addresses carefully and return a JSON object.
+You are deciding whether two POI records refer to the same physical place.
+
+You will receive:
+- {sim}: a similarity score between 0.0 and 1.0
+- {pred}: a baseline predicted label (1 = same place, 0 = different)
+- normalized address fields (all lowercase, expanded suffixes like "street", "avenue", "road")
+
+Use this decision process:
+
+1. PRIORITIZE "sim" AND "pred":
+   - If pred = 1 and sim is high (>= 0.7), assume same_place = 1 unless the address clearly disagrees.
+   - If pred = 0 and sim is low (<= 0.3), assume same_place = 0 unless the address clearly shows they match.
+
+2. USE THE ADDRESS AS A CONFIRMATION CHECK (SECONDARY):
+   - Address fields are already normalized.
+   - Check:
+       • street number
+       • street name
+       • city/locality
+       • postcode
+       • country
+   - If the baseline decision from sim + pred conflicts with the address
+     (e.g., different street numbers or different cities), flip the decision.
+
+3. GENERAL RULE:
+   - Similar address → supports same_place = 1
+   - Very different address → supports same_place = 0
+   - When uncertain, rely on sim + pred unless the address strongly contradicts it.
+   - If all address components match return same_place=1 regardless of sim and pred.
+   - if phone number is the exact same there is a very high chance of match
+
 
 OUTPUT REQUIREMENTS:
 - Return ONLY a JSON object.
 - "same_place" must be 1 or 0.
 - "confidence" must be a number between 0.0 and 1.0.
-- "explanation" must be 1–2 sentences and MUST describe the specific fields
+- "explanation" must be 1 sentence and MUST describe the specific fields
   that led to the decision.
 - Do NOT reuse generic phrases across answers.
 
@@ -42,16 +71,7 @@ Region / State:     {base_address_region}
 Postcode:           {base_address_postcode}
 Country:            {base_address_country}
 Phone:              {base_phone}
-
 ============================================================
-MATCHING RULES YOU MUST FOLLOW:
-1. Street number + street name are the strongest indicators.
-2. Suite / unit / floor differences DO NOT matter (still same place).
-3. ZIP+4 vs ZIP standard is the SAME.
-4. City and region should match or be extremely close.
-5. Phone numbers CAN suggest same place but cannot override address mismatches.
-6. Different street numbers OR different street names → almost always different place.
-7. Explanations MUST reference the exact fields that matched or mismatched.
 
 Return ONLY JSON.
 """
@@ -123,6 +143,11 @@ def process_csv(input_csv="output.csv", output_csv="llm_predictions.csv"):
             base_address_postcode=row.get("base_address_postcode", ""),
             base_address_country=row.get("base_address_country", ""),
             base_phone=row.get("base_phone", ""),
+
+            sim = row.get("match_score", ""),
+            pred = row.get("pred_label", ""),
+
+
         )
 
 
