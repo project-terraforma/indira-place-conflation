@@ -1,26 +1,106 @@
-# Project C: Places conflation with scalable language models
-### Problem description
-Determine if scalable language models, such as small LLMs or static embedding models, can outperform our existing matching approach.
+# POI Conflation via Hybrid Similarity Scoring and LLM Reasoning
 
-### Proposed proof-of-concept (POC)
-We will conduct a comparative analysis of various language models against Overture's current places matcher. The project will test multiple models and methodologies on a dataset of both matched and unmatched places. The primary goal is to identify a language model that can "beat our matcher" in performance while also providing a better price-to-performance ratio.
+This project determines whether two Points of Interest (POI) refer to the same physical place. It combines deterministic similarity scoring with LLM-based structured reasoning and evaluates multiple models for accuracy and consistency.
 
-### Key questions
-1. Can small LLMs outperform Overture’s current place matcher?
-2. Which models offer the best price-performance balance?
-3. What methods have better performance in language model-based matching?
-4. How do models handle different countries, languages, and missing data?
+## Overview
 
-### Key deliverables
-* A comparative analysis report detailing the performance of each tested language model against the current Overture matcher
-* An evaluation of the price-to-performance ratio for each model
-* A recommendation on whether a language model should replace the current conflation model
+POI conflation requires deciding whether two independently sourced business/location records represent the same real-world address.
+This system implements a binary classifier with two main components:
 
-### Set-Up
-Python Libraries Installation:
-``` Bash
-conda install -c conda-forge lonboard overturemaps-py geopandas pandas shapely
-```
+1. **Feature-Based Similarity Scoring**
+   - Hybrid scoring across name, address, phone, website, and category
+   - Uses RapidFuzz, Jaro–Winkler, TF-IDF, and custom address parsing
+   - Produces:
+     - `match_score` (0–1)
+     - `pred_label` (1 = same place, 0 = different)
 
-### To-do List
+2. **LLM-Based Verification Layer**
+   - LLM receives:
+     - `sim` (match_score)
+     - `pred` (baseline prediction)
+     - normalized address fields
+   - Confirms or overrides the baseline prediction
+   - Outputs:
+     - `same_place`
+     - `confidence`
+     - one-sentence explanation referencing specific fields
 
+This hybrid method allows deterministic scores to handle easy cases efficiently while the LLM resolves ambiguous cases.
+
+## Pipeline
+
+### 1. Data Cleaning
+- Normalize names, categories, phone numbers, websites
+- Expand street suffixes (street, avenue, road)
+- Produce normalized full address strings
+- Saves cleaned results to `output.csv`
+
+### 2. Similarity Scoring (`fuzzmatch.py`)
+- Name similarity from RapidFuzz + Jaro–Winkler + TF-IDF
+- Address similarity with custom parsing (street number, street name, unit handling)
+- Exact match comparison for phone, website domain, and category
+- Produces:
+  - `match_score`
+  - `pred_label`
+
+### 3. LLM Evaluation (`main.py`, `llm.py`)
+- LLM receives:
+  - similarity score
+  - baseline prediction
+  - normalized address fields
+- LLM applies rules:
+  - prioritize sim + pred
+  - use address as confirmation
+  - override if addresses disagree
+- Produces:
+  - `llm_same_place`
+  - `llm_confidence`
+  - `llm_reason`
+- Output saved to `llm_predictions.csv`
+
+### 4. Evaluation (`check.py`, `test.py`)
+- Compute accuracy comparing LLM predictions to ground truth
+- Generate confusion matrix
+- Export incorrect rows for error analysis:
+  - `incorrect_predictions.csv`
+  - `incorrect_ml_predictions.csv`
+  - `fails.csv`
+
+## LLM Models Tested
+
+All models were tested via on-demand API access:
+
+- `llama-3.3-70b-versatile`
+- `moonshotai/kimi-k2-instruct-0905`
+- `moonshotai/kimi-k2-instruct`
+- `meta-llama/llama-4-scout-17b-16e-instruct`
+- `llama-3.1-8b-instant`
+
+Each model was evaluated for JSON reliability, address consistency, handling of similarity scores, and overall accuracy.
+
+## Repository Structure
+project/
+│
+├── dataclean.py # Data normalization and preprocessing
+├── fuzzmatch.py # Hybrid similarity scoring system
+├── llm.py # LLM interface and prompt handling
+├── main.py # Runs scoring + LLM evaluation end-to-end
+├── check.py # Evaluation of accuracy and confusion matrix
+├── test.py # Helper testing utilities
+│
+├── output.csv # Cleaned baseline predictions
+├── llm_predictions.csv # Main LLM evaluation output
+│
+├── kimi.csv # Results from Kimi models
+├── llama8b-instant.csv # Results from Llama 8B Instant
+
+
+## Summary
+
+This project provides a reproducible POI conflation workflow combining:
+
+- Deterministic similarity scoring  
+- LLM-based structured decision making  
+- Multi-model evaluation and error analysis  
+
+This approach improves robustness and interpretability when matching business/location records across heterogeneous datasets.
