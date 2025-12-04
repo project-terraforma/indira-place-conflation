@@ -43,7 +43,7 @@ This hybrid method allows deterministic scores to handle easy cases efficiently 
   - `match_score`
   - `pred_label`
 
-### 3. LLM Evaluation (`main.py`, `llm.py`)
+### 3. LLM Evaluation (`main.py`, `test.py`)
 - LLM receives:
   - similarity score
   - baseline prediction
@@ -58,7 +58,7 @@ This hybrid method allows deterministic scores to handle easy cases efficiently 
   - `llm_reason`
 - Output saved to `llm_predictions.csv`
 
-### 4. Evaluation (`check.py`, `test.py`)
+### 4. Evaluation (`check.py`, `benchmark.py`)
 - Compute accuracy comparing LLM predictions to ground truth
 - Generate confusion matrix
 - Export incorrect rows for error analysis:
@@ -79,14 +79,15 @@ All models were tested via on-demand API access:
 Each model was evaluated for JSON reliability, address consistency, handling of similarity scores, and overall accuracy.
 
 ## Repository Structure
-pipeline/
-├── check.py
-├── dataclean.py
-├── fuzzmatch.py
-├── llm.py
-├── main.py
-├── output.csv
-└── test.py
+`pipeline/`
+
+     check.py
+     dataclean.py
+     fuzzmatch.py
+     llm.py
+     main.py
+     output.csv
+     test.py
 
 
 ## Summary
