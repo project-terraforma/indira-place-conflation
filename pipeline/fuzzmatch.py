@@ -148,15 +148,15 @@ def score_row(row) -> float:
     """Compute the match score for a single cleaned row."""
     # Updated column names - no _clean suffix
     return (
-        0.45 * best_name_similarity(row["name_primary"], row["base_name_primary"]) +
-        0.35 * best_address_similarity(row["address_full"], row["base_address_full"]) +
-        0.10 * best_phone_similarity(row["phone"], row["base_phone"]) +
+        0.20 * best_name_similarity(row["name_primary"], row["base_name_primary"]) +
+        0.50 * best_address_similarity(row["address_full"], row["base_address_full"]) +
+        0.15 * best_phone_similarity(row["phone"], row["base_phone"]) +
         0.05 * best_website_similarity(row["website"], row["base_website"]) +
-        0.05 * best_category_similarity(row["category_primary"], row["base_category_primary"])
+        0.10 * best_category_similarity(row["category_primary"], row["base_category_primary"])
     )
 
 
-def predict_label(score: float, threshold: float = 0.671) -> int:
+def predict_label(score: float, threshold: float = 0.63) -> int:
     """Convert score into a binary label."""
     return 1 if score >= threshold else 0
 

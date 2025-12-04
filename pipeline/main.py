@@ -4,6 +4,7 @@ import pandas as pd
 
 # Load parquet file
 df_raw = pd.read_parquet("../src/data/data.parquet")
+df_raw.to_csv("raw.csv", index=False)
 # Clean POI data
 print("\nCleaning data...")
 # Clean
