@@ -1,5 +1,9 @@
 # POI Conflation via Hybrid Similarity Scoring and LLM Reasoning
 
+[View the full presentation (PDF)](./presentation.pdf)
+
+Indira Mariya - Places Conflation Model Evaluation.pdf
+
 This project determines whether two Points of Interest (POI) refer to the same physical place. It combines deterministic similarity scoring with LLM-based structured reasoning and evaluates multiple models for accuracy and consistency.
 
 ## Overview
