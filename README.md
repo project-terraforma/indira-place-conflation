@@ -1,10 +1,10 @@
-# POI Conflation via Hybrid Similarity Scoring and LLM Reasoning
+# POI Conflation via Hybrid Similarity Scoring and SLM Reasoning
 
 [View the full presentation (PDF)](./presentation.pdf)
 
 Indira Mariya - Places Conflation Model Evaluation.pdf
 
-This project determines whether two Points of Interest (POI) refer to the same physical place. It combines deterministic similarity scoring with LLM-based structured reasoning and evaluates multiple models for accuracy and consistency.
+This project determines whether two Points of Interest (POI) refer to the same physical place. It combines deterministic similarity scoring with SLM-based structured reasoning and evaluates multiple models for accuracy and consistency.
 
 ## Overview
 
@@ -18,8 +18,8 @@ This system implements a binary classifier with two main components:
      - `match_score` (0–1)
      - `pred_label` (1 = same place, 0 = different)
 
-2. **LLM-Based Verification Layer**
-   - LLM receives:
+2. **SLM-Based Verification Layer**
+   - SLM receives:
      - `sim` (match_score)
      - `pred` (baseline prediction)
      - normalized address fields
@@ -29,7 +29,7 @@ This system implements a binary classifier with two main components:
      - `confidence`
      - one-sentence explanation referencing specific fields
 
-This hybrid method allows deterministic scores to handle easy cases efficiently while the LLM resolves ambiguous cases.
+This hybrid method allows deterministic scores to handle easy cases efficiently while the SLM resolves ambiguous cases.
 
 ## Pipeline
 
@@ -47,30 +47,30 @@ This hybrid method allows deterministic scores to handle easy cases efficiently 
   - `match_score`
   - `pred_label`
 
-### 3. LLM Evaluation (`main.py`, `test.py`)
-- LLM receives:
+### 3. SLM Evaluation (`main.py`, `test.py`)
+- SLM receives:
   - similarity score
   - baseline prediction
   - normalized address fields
-- LLM applies rules:
+- SLM applies rules:
   - prioritize sim + pred
   - use address as confirmation
   - override if addresses disagree
 - Produces:
-  - `llm_same_place`
-  - `llm_confidence`
-  - `llm_reason`
-- Output saved to `llm_predictions.csv`
+  - `SLM_same_place`
+  - `SLM_confidence`
+  - `SLM_reason`
+- Output saved to `SLM_predictions.csv`
 
 ### 4. Evaluation (`check.py`, `benchmark.py`)
-- Compute accuracy comparing LLM predictions to ground truth
+- Compute accuracy comparing SLM predictions to ground truth
 - Generate confusion matrix
 - Export incorrect rows for error analysis:
   - `incorrect_predictions.csv`
   - `incorrect_ml_predictions.csv`
   - `fails.csv`
 
-## LLM Models Tested
+## SLM Models Tested
 
 All models were tested via on-demand API access:
 
@@ -88,7 +88,7 @@ Each model was evaluated for JSON reliability, address consistency, handling of 
      check.py
      dataclean.py
      fuzzmatch.py
-     llm.py
+     SLM.py
      main.py
      output.csv
      test.py
@@ -99,7 +99,7 @@ Each model was evaluated for JSON reliability, address consistency, handling of 
 This project provides a reproducible POI conflation workflow combining:
 
 - Deterministic similarity scoring  
-- LLM-based structured decision making  
+- SLM-based structured decision making  
 - Multi-model evaluation and error analysis  
 
 This approach improves robustness and interpretability when matching business/location records across heterogeneous datasets.
